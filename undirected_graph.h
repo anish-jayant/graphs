@@ -80,6 +80,8 @@ class undirected_graph {
 			e_check();
 		}
 		
+		vector<Node*> getVertices() const { return Vertices; }
+		vector<Edge> getEdges() const { return Edges; }
 		void v_print();
 		void e_print();
 		

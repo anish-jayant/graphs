@@ -9,7 +9,6 @@ using namespace std;
 
 const char* loop_error_msg = "No single-vertex loops in an undirected graph";
 
-
 /**
  *	@brief	Deletes duplicate vertices, sorted by 
  *			node character type (see operator==) for node class
@@ -65,6 +64,7 @@ void undirected_graph::e_check() {
 	}
 
 	auto og = myset.size();
+	//cout << og << endl;
 	int skip = 0;
 	for (int i = 0; i < Edges.size(); i++)
 	{
