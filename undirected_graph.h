@@ -84,7 +84,7 @@ class undirected_graph {
 		vector<Edge> getEdges() const { return Edges; }
 		void v_print();
 		void e_print();
-		
+		friend ostream& operator<<(ostream& o, const undirected_graph& u);
 		bool isUnweighted();
 	
 };

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <queue>
 
 #include "undirected_graph.h"
 
@@ -170,4 +171,32 @@ Edge::Edge(Node& a, Node& b, int w) {
 	ends[0] = &a;
 	ends[1] = &b;
 	weight = w;
+}
+
+/**
+ *	@brief	Operator<< overloading to quickly print undirected graph objects
+ */
+ostream& operator<<(ostream& o, const undirected_graph& u) {
+	
+	vector<Node*> Vertices = u.getVertices();
+	vector<Edge> Edges = u.getEdges();
+	auto vit = Vertices.begin();
+	o << "[Node, Degree] list: {";
+	while (vit != Vertices.end())
+	{
+		o << '[' << (*vit)->val << ", " << (*vit)->degree() << "]";
+		vit++;
+	}
+	o << "}" << endl;
+	
+	auto eit = Edges.begin();
+	o << "Edges list: {";
+	while (eit != Edges.end())
+	{
+		o << "[" << ((*eit).ends[0])->val << "<=>" << ((*eit).ends[1])->val << "]";
+		eit++;
+	}
+	o << "}" << endl;
+	
+	return o;
 }

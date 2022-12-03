@@ -35,8 +35,8 @@ int main () {
 
 		//initialize graph using vectors, print edges and vertices
 		undirected_graph u(v, e);
-		//u.v_print(); u.e_print();
-		breadth_layers(u, n[0]);
+		cout << u;
+		cout << boolalpha << isBipartate(u) << endl;
 	} 
 	catch(InvalidEdgeError& e) {
 		//catch potentially invalid edges
