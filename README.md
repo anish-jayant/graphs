@@ -1,2 +1,6 @@
 # graphs
-Graph Setup and Algorithms
+Graph Setup
+
+Algorithms to come :)
+
+
