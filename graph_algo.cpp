@@ -6,7 +6,7 @@
 
 using namespace std;
 
-vector<vector<Node*>> bfs(const undirected_graph& u, Node& n) {
+vector<vector<Node*>> depth_layers(const undirected_graph& u, Node& n) {
 	vector<vector<Node*>> result;
 	const vector<Node*> v = u.getVertices();
 	unordered_set<Node*> unexplored; 

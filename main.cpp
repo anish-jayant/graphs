@@ -36,7 +36,7 @@ int main () {
 		//initialize graph using vectors, print edges and vertices
 		undirected_graph u(v, e);
 		//u.v_print(); u.e_print();
-		bfs(u, n[0]);
+		depth_layers(u, n[0]);
 	} 
 	catch(InvalidEdgeError& e) {
 		//catch potentially invalid edges

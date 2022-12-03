@@ -7,4 +7,4 @@
 using namespace std;
 
 //Breadth-first search of a graph beginning at node n
-vector<vector<Node*>> bfs(const undirected_graph& u, Node& n);
+vector<vector<Node*>> depth_layers(const undirected_graph& u, Node& n);
