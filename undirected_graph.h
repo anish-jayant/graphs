@@ -14,25 +14,29 @@ struct InvalidEdgeError : public std::runtime_error {
 
 //Node struct, basis for all vertices of the graph
 struct Node {
-	char val; 
+	char val;
+	vector<Node*> adj;
 	Node() : val(0) {}
 	Node(char v) : val(v) {}
 	bool operator==(const Node& n) const {
 		return (this->val == n.val);
+	}
+	int degree() const {
+		return adj.size();
 	}
 };
 
 //Edge struct, basis for all edges of the graph
 struct Edge {
 	int weight; 
-	Node ends[2];
+	Node* ends[2];
 	Edge() : weight(0) {}
 	Edge(Node& a, Node& b);
 	Edge(Node& a, Node& b, int w);
 	bool operator==(const Edge& e) const 
 	{
-		return (e.ends[0].val == this->ends[0].val && e.ends[1].val == this->ends[1].val) ||
-				(e.ends[0].val == this->ends[1].val && e.ends[1].val == this->ends[0].val);
+		return (e.ends[0]->val == this->ends[0]->val && e.ends[1]->val == this->ends[1]->val) ||
+				(e.ends[0]->val == this->ends[1]->val && e.ends[1]->val == this->ends[0]->val);
 	}
 	bool getWeight() { return weight; }
 };
@@ -41,7 +45,7 @@ struct Edge {
 class undirected_graph {
 	
 	private:
-		vector<Node> Vertices;
+		vector<Node*> Vertices;
 		vector<Edge> Edges;
 		void v_check();
 		void e_check();
@@ -49,7 +53,7 @@ class undirected_graph {
 	public: 
 		undirected_graph() {}
 		
-		undirected_graph(vector<Node>& v) { 
+		undirected_graph(vector<Node*>& v) { 
 			Vertices = v;
 			v_check();
 		}
@@ -59,15 +63,15 @@ class undirected_graph {
 			e_check();
 		}
 		
-		undirected_graph(vector<Node>& v, vector<Edge>& e) {
-			Edges = e;
+		undirected_graph(vector<Node*>& v, vector<Edge>& e) {
 			Vertices = v;
-			e_check();
 			v_check();
+			Edges = e;
+			e_check();
 		}
 		
 		void push_vertex(Node& n) { 
-			Vertices.push_back(n); 
+			Vertices.push_back(&n); 
 			v_check();
 		}
 		
@@ -91,4 +95,3 @@ struct customEdgeHash
     return x.first ^ x.second;
   }
 };
-

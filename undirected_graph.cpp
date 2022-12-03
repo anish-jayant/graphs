@@ -20,7 +20,7 @@ void undirected_graph::v_check() {
 	auto it = Vertices.begin();
 	while (it != Vertices.end())
 	{
-		myset.insert(it->val);
+		myset.insert((*it)->val);
 		it++;
 	}
 
@@ -28,7 +28,7 @@ void undirected_graph::v_check() {
 	int skip = 0;
 	for (int i = 0; i < Vertices.size(); i++)
 	{
-		auto it = myset.find(Vertices[i].val);
+		auto it = myset.find(Vertices[i]->val);
 		if (it != myset.end())
 		{
 			myset.erase(it);
@@ -56,10 +56,10 @@ void undirected_graph::e_check() {
 	auto it = Edges.begin();
 	while (it != Edges.end())
 	{
-		if (myset.find(make_pair(it->ends[0].val, it->ends[1].val)) == myset.end() 
-			&& myset.find(make_pair(it->ends[1].val, it->ends[0].val)) == myset.end())
+		if (myset.find(make_pair(it->ends[0]->val, it->ends[1]->val)) == myset.end() 
+			&& myset.find(make_pair(it->ends[1]->val, it->ends[0]->val)) == myset.end())
 		{
-			myset.insert(make_pair(it->ends[0].val, it->ends[1].val));
+			myset.insert(make_pair(it->ends[0]->val, it->ends[1]->val));
 		}
 		it++;
 	}
@@ -68,9 +68,15 @@ void undirected_graph::e_check() {
 	int skip = 0;
 	for (int i = 0; i < Edges.size(); i++)
 	{
-		auto ait = myset.find(make_pair(Edges[i].ends[0].val, Edges[i].ends[1].val));
+		Node* a = Edges[i].ends[0];
+		Node* b = Edges[i].ends[1];
+		auto ait = myset.find(make_pair(a->val, b->val));
 		if (ait != myset.end())
 		{
+			//cout << a << ", " << a->val << endl;
+			(a->adj).push_back(b);
+			(b->adj).push_back(a);
+			//cout << a->degree() << endl;
 			myset.erase(ait);
 			Edges[i-skip] = Edges[i];
 			if (myset.size() == 0) break;
@@ -91,12 +97,11 @@ void undirected_graph::e_check() {
  *			Time Comp. O(|V|), Space Comp. O(|V|) 
 */
 void undirected_graph::v_print() {
-	v_check();
 	auto it = Vertices.begin();
-	cout << "Vertice list: ";
+	cout << "(Node, Degree) list: ";
 	while (it != Vertices.end())
 	{
-		cout << '(' << (*it).val << ")";
+		cout << '(' << (*it)->val << ", " << (*it)->degree() << ")";
 		it++;
 	}
 	cout << endl;
@@ -110,12 +115,11 @@ void undirected_graph::v_print() {
  *			Time Comp. O(|E|), Space Comp. O(|E|) 
 */
 void undirected_graph::e_print() {
-	e_check();
 	auto it = Edges.begin();
 	cout << "Edges list: ";
 	while (it != Edges.end())
 	{
-		cout << "(" << ((*it).ends[0]).val << "<=>" << ((*it).ends[1]).val << ")";
+		cout << "(" << ((*it).ends[0])->val << "<=>" << ((*it).ends[1])->val << ")";
 		it++;
 	}
 	cout << endl;
@@ -150,8 +154,8 @@ Edge::Edge(Node& a, Node& b) {
 	if (a.val == b.val) {
 		throw InvalidEdgeError(loop_error_msg);
 	}
-	ends[0] = a;
-	ends[1] = b;
+	ends[0] = &a;
+	ends[1] = &b;
 	weight = 0;
 }
 
@@ -163,7 +167,7 @@ Edge::Edge(Node& a, Node& b, int w) {
 	if (a.val == b.val) {
 		throw InvalidEdgeError(loop_error_msg);
 	}
-	ends[0] = a;
-	ends[1] = b;
+	ends[0] = &a;
+	ends[1] = &b;
 	weight = w;
 }
