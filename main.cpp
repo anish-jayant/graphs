@@ -18,9 +18,9 @@ int main () {
 		Edge e4(a, c); Edge e5(c, b); Edge e6(a, d);
 		
 		//push back all verts & edges to vectors
-		vector<Node> v;
+		vector<Node*> v;
 		vector<Edge> e;
-		v.push_back(a); v.push_back(b); v.push_back(c); v.push_back(d);
+		v.push_back(&a); v.push_back(&b); v.push_back(&c); v.push_back(&d);
 		
 		e.push_back(e1); e.push_back(e2); e.push_back(e3); 
 		e.push_back(e4); e.push_back(e5); e.push_back(e6);
