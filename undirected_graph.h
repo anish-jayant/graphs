@@ -16,8 +16,16 @@ struct InvalidEdgeError : public std::runtime_error {
 struct Node {
 	char val;
 	vector<Node*> adj;
-	Node() : val(0) {}
-	Node(char v) : val(v) {}
+	Node() : val(0) {
+		adj.clear();
+	}
+	Node(const Node& a) {
+		val = a.val;
+		adj = a.adj;
+	}
+	Node(char v) : val(v) {
+		adj.clear();
+	}
 	bool operator==(const Node& n) const {
 		return (this->val == n.val);
 	}
@@ -31,8 +39,8 @@ struct Edge {
 	int weight; 
 	Node* ends[2];
 	Edge() : weight(0) {}
-	Edge(Node& a, Node& b);
-	Edge(Node& a, Node& b, int w);
+	Edge(Node* a, Node* b);
+	Edge(Node* a, Node* b, int w);
 	bool operator==(const Edge& e) const 
 	{
 		return (e.ends[0]->val == this->ends[0]->val && e.ends[1]->val == this->ends[1]->val) ||
@@ -68,6 +76,7 @@ class undirected_graph {
 			v_check();
 			Edges = e;
 			e_check();
+			auto it  = Vertices.begin();
 		}
 		
 		void push_vertex(Node& n) { 

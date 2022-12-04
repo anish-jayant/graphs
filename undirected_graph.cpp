@@ -42,7 +42,7 @@ void undirected_graph::v_check() {
 		}
 	}
 	Vertices.resize(og);
-	
+	myset.clear();
 }
 
 /**
@@ -60,10 +60,18 @@ void undirected_graph::e_check() {
 			&& myset.find(make_pair(it->ends[1]->val, it->ends[0]->val)) == myset.end())
 		{
 			myset.insert(make_pair(it->ends[0]->val, it->ends[1]->val));
+			it->ends[0]->adj.clear();
+			it->ends[1]->adj.clear();
 		}
 		it++;
 	}
-
+	auto vit = Vertices.begin();
+	while (vit != Vertices.end())
+	{
+		(*vit)->adj.clear();
+		vit++;
+	}
+	
 	auto og = myset.size();
 	//cout << og << endl;
 	int skip = 0;
@@ -77,7 +85,6 @@ void undirected_graph::e_check() {
 			//cout << a << ", " << a->val << endl;
 			(a->adj).push_back(b);
 			(b->adj).push_back(a);
-			//cout << a->degree() << endl;
 			myset.erase(ait);
 			Edges[i-skip] = Edges[i];
 			if (myset.size() == 0) break;
@@ -89,13 +96,11 @@ void undirected_graph::e_check() {
 		}
 	}
 	Edges.resize(og);
-	
 }
 
 /**
  *	@brief	Print all of the vertices present in the graph, deletes duplicates
  *			prior.
- *			Time Comp. O(|V|), Space Comp. O(|V|) 
 */
 void undirected_graph::v_print() {
 	auto it = Vertices.begin();
@@ -113,8 +118,7 @@ void undirected_graph::v_print() {
 /**
  *	@brief	Print all of the edges present in the graph, deletes duplicates
  *			prior.
- *			Time Comp. O(|E|), Space Comp. O(|E|) 
-*/
+ */
 void undirected_graph::e_print() {
 	auto it = Edges.begin();
 	cout << "Edges list: ";
@@ -149,32 +153,31 @@ bool undirected_graph::isUnweighted() {
  *	@brief	Constructor for Edge class, has safeguards to check that
  *			user has not mistakenly entered a single-vertex loop_error_msg
  *			but assumes that both a and b are in Vertices
- *			O(1)
  */
-Edge::Edge(Node& a, Node& b) {
-	if (a.val == b.val) {
+Edge::Edge(Node* a, Node* b) {
+	if (a->val == b->val) {
 		throw InvalidEdgeError(loop_error_msg);
 	}
-	ends[0] = &a;
-	ends[1] = &b;
+	ends[0] = a;
+	ends[1] = b;
 	weight = 0;
 }
 
 /**
  *	@brief	Identical to past constructor, accepts weight value_comp
- *			O(1)
  */
-Edge::Edge(Node& a, Node& b, int w) {
-	if (a.val == b.val) {
+Edge::Edge(Node* a, Node* b, int w) {
+	if (a->val == b->val) {
 		throw InvalidEdgeError(loop_error_msg);
 	}
-	ends[0] = &a;
-	ends[1] = &b;
+	ends[0] = a;
+	ends[1] = b;
 	weight = w;
 }
 
 /**
- *	@brief	Operator<< overloading to quickly print undirected graph objects
+ *	@brief	Operator<< overloading to quickly print graph objects
+ *			T: O(|V|+|E|), S: O(|V|+|E|)
  */
 ostream& operator<<(ostream& o, const undirected_graph& u) {
 	
