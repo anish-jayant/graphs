@@ -9,7 +9,9 @@ using namespace std;
 
 /**
  *	@brief	Generates layers of a graph using a breadth-first search
- *			beginning from a given vertex
+ *			beginning from a given vertex via adjacency list provided 
+ *			in the class. 
+ *			Time Comp. O(|V|+|E|)
  */
 vector<vector<Node*>> breadth_layers(const undirected_graph& u, Node& n) {
 	vector<vector<Node*>> result;
@@ -47,11 +49,16 @@ vector<vector<Node*>> breadth_layers(const undirected_graph& u, Node& n) {
 	}
 
 	//cout << "Depth: " << depth << endl;
-	
+	unexplored.clear();
 	return result;
 }
 
-bool isBipartate(const undirected_graph& u)
+/**
+ *	@brief	Returns a boolean, True if u is bipartate, false otherwise
+ *			checks by assigning colors according to BFS layering, complexity follows
+ *			Time Comp. O(|V|+|E|)
+ */
+bool isBipartite(const undirected_graph& u)
 {
 	//Use the bfs layering to assign colorings
 	vector<Node*> v = u.getVertices();
@@ -86,6 +93,7 @@ bool isBipartate(const undirected_graph& u)
 			{
 				if (col[(*it)->val] == col[temp->val])
 				{
+					unexplored.clear();
 					return false;
 				}
 				if (unexplored.find(*it) != unexplored.end())
@@ -97,5 +105,55 @@ bool isBipartate(const undirected_graph& u)
 			}
 		}
 	}
+	unexplored.clear();
 	return true;
+}
+/**
+ *	@brief	Finds and returns all disjoint subgraphs. Any pair of disjoint 
+ *			subgraphs shares no vertices or edges, and together, the subgraphs
+ *			recompose the original graph. 
+ */
+vector<undirected_graph> disjoints(const undirected_graph& u) {
+	//initialize and populate variables
+	vector<undirected_graph> result;
+	vector<Node*> v = u.getVertices();
+	unordered_set<Node*> unexplored; 
+	for (int i = 0; i < v.size(); i++) {
+		unexplored.insert(v[i]);
+	}
+	
+	//repeatedly run bfs while there are still vertices unexplored
+	while (unexplored.size() > 0) {
+		vector<Node*> curv;
+		vector<Edge> cure;
+		Node* start = *(unexplored.begin());
+		queue<Node*> q;
+		q.push(start);
+		unexplored.erase(unexplored.find(start));
+		while (!q.empty()) {
+			int size = q.size();
+			for (int i = 0; i < size; i++)
+			{
+				Node* temp = q.front(); q.pop();
+				vector<Node*> adj = temp->adj;
+				auto it = adj.begin();
+				while (it != adj.end())
+				{
+					if (unexplored.find(*it) != unexplored.end())
+					{
+						q.push(*it);
+						unexplored.erase(unexplored.find(*it));
+					}
+					curv.push_back(*it);
+					cure.push_back(Edge(temp, *it));
+					it++;
+				}
+				
+			}
+		}
+		undirected_graph u(curv, cure);
+		//cout << u.getEdges().size() << endl;
+		result.push_back(u);
+	}
+	return result;
 }

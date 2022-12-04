@@ -10,4 +10,7 @@ using namespace std;
 vector<vector<Node*>> breadth_layers(const undirected_graph& u, Node& n);
 
 //Is a graph bipartate (two-colorable)
-bool isBipartate(const undirected_graph& u);
+bool isBipartite(const undirected_graph& u);
+
+//Returns all disjoint subgraphs of a graph
+vector<undirected_graph> disjoints(const undirected_graph& u);
